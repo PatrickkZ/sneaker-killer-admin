@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.patrick.sneakerkilleradmin.mapper.RoleMapper">
+    <resultMap id="roleMap" type="Role">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+
+        <collection property="permissions" ofType="Permission" column="id" select="com.patrick.sneakerkilleradmin.mapper.PermissionMapper.getByRoleId">
+        </collection>
+    </resultMap>
+    <select id="getById" parameterType="Integer" resultType="Role">
+        select * from role where id=#{value}
+    </select>
+
+    <select id="getRoleWithPermission" parameterType="Integer" resultMap="roleMap">
+        select * from role where id=#{value}
+    </select>
+
+    <select id="getByUserId" parameterType="Integer" resultType="Role">
+        select role.id,role.name,role.description
+        from role,admin_user_role
+        where admin_user_role.uid=#{value} and role.id=admin_user_role.rid
+    </select>
+
+    <select id="listAll" resultType="Role">
+        select * from role
+    </select>
+
+    <insert id="insertDefaultRole" parameterType="Integer">
+        insert into admin_user_role(uid,rid)
+        values(#{value},'1')
+    </insert>
+</mapper>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.patrick.sneakerkilleradmin.mapper.MenuMapper">
+    <resultMap id="menuMap" type="Menu">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="name_zh" property="nameZh"/>
+        <result column="route" property="route"/>
+    </resultMap>
+
+    <select id="getByRoleIds" parameterType="java.util.List" resultMap="menuMap">
+        select distinct menu.id,menu.name,menu.name_zh,menu.route
+        from menu,role_menu
+        where role_menu.rid in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        and role_menu.mid=menu.id
+    </select>
+</mapper>
